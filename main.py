@@ -3,18 +3,19 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 
-url = 'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris/414.html?giropharm=0'
+
+url_2 = f'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris/9.html?giropharm=0'
+
+url = 'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris.html?giropharm=0'
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
-adress = soup.find(class_='pharmacie_coordonnee')
-tel = soup.find(class_='pharmacie_coordonnee_tel')
-pharmacies_info = soup.find(class_='pharmacie_info')
+bloc = soup.find(class_='pharmacie_bloc_resultat contenu_vert_clair')
 
-all_pharma_info = pharmacies_info.get_text()
-
+bloc_text = bloc.get_text()
+print(len(url))
 
 
-print(all_pharma_info)
+
 
 
 
