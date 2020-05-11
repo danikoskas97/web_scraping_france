@@ -12,6 +12,7 @@ soup = BeautifulSoup(response.text, 'html.parser')
 bloc = soup.find(class_='pharmacie_bloc_resultat contenu_vert_clair')
 
 bloc_text = bloc.get_text()
+
 print(len(url))
 
 
