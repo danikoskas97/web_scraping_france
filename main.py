@@ -14,7 +14,7 @@ bloc = soup.find(class_='pharmacie_bloc_resultat contenu_vert_clair')
 
 all_page = bloc.get_text()
 
-print(len(url))
+print(all_page)
 
 
 
