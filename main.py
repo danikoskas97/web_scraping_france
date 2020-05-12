@@ -16,9 +16,11 @@ all_page = bloc.get_text()
 
 print(all_page)
 
-
-
-
+'''
+stuff = pd.DataFrame({
+    
+})
+'''
 
 
 
