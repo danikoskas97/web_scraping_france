@@ -1,64 +1,25 @@
-import requests
 from bs4 import BeautifulSoup
-import pandas as pd
-import time
-url_max = 'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris/1008.html?giropharm=0'
+import requests
+from csv import writer
 
-# you can see that the url 2 have '/9' => one page contains 9 pharma info i need to find a way to do a for loop to get
-# all the all_page for all the pages
-url = 'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris.html?giropharm=0'
-response = requests.get(url)
-soup = BeautifulSoup(response.text, 'html.parser')
-bloc = soup.find(class_='pharmacie_bloc_resultat contenu_vert_clair')
-all_page = bloc.get_text()
+with open('pharmacy.csv', 'w') as csv_file:
+    csv_writer = writer(csv_file)
+    headers = ['Name', 'Address', 'Telephone number']
+    csv_writer.writerow(headers)
+    for index in range(1008, 1, -9):
+        response = requests.get(f'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris/{index}.html?giropharm=0')
+        beauty = BeautifulSoup(response.text, 'html.parser')
 
+        pharmacies = beauty.find_all(class_='pharmacie_info')
 
-
-'''
-url_base = 'https://www.giropharm.fr/trouver-ma-pharmacie/resultats/resultat/dpt-75-paris'
-url_suffix = '.html?giropharm=0'
-for i in range(1, 28, 9):
-    url_ins = ''
-    if i < 2:
-        url_ins = ''
-    else:
-        url_ins = f'/{i - 1}'
-
-    url =  url_base + url_ins + url_suffix
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    bloc = soup.find(class_='pharmacie_bloc_resultat contenu_vert_clair')
-    all_page = bloc.get_text()
-    print(all_page)
-'''
-
-
-'''
-stuff = pd.DataFrame({
-    
-})
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        for pharmacy in pharmacies:
+            Name = pharmacy.find('h2').get_text().replace('\n', '')
+            Address = pharmacy.find(class_='pharmacie_coordonnee').get_text().replace(' ', '').replace('\n', '')
+            raw_phone_number = str(str(pharmacy.find(class_='pharmacie_coordonnee_tel').contents[1].get_text()).encode('utf-8', 'ignore'))
+            Telephone_number = ""
+            for char in raw_phone_number:
+                if char.isdigit():
+                    Telephone_number+=char
+            Telephone_number = Telephone_number[len(Telephone_number)-10:]
+            csv_writer.writerow([Name, Address, Telephone_number])
 
